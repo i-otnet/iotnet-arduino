@@ -2,14 +2,10 @@
 
 namespace IoTNet {
 
-ESP32MQTT::ESP32MQTT() 
-    : mqttClient(nullptr), 
-      clientId("ESP32Agent"),
-      mqttServer(IoTNetConfig::kMqttServer),
-      mqttPort(IoTNetConfig::kMqttPort),
-      mqttUser(IoTNetConfig::kMqttUser),
-      mqttPass(IoTNetConfig::kMqttPass) {
-}
+ESP32MQTT::ESP32MQTT()
+    : mqttClient(nullptr), clientId("ESP32Agent"), mqttServer(IoTNetConfig::kMqttServer),
+      mqttPort(IoTNetConfig::kMqttPort), mqttUser(IoTNetConfig::kMqttUser),
+      mqttPass(IoTNetConfig::kMqttPass) {}
 
 ESP32MQTT::~ESP32MQTT() {
     if (mqttClient) {
@@ -17,30 +13,30 @@ ESP32MQTT::~ESP32MQTT() {
     }
 }
 
-void ESP32MQTT::begin(WiFiClientSecure& wifiClient, const char* caCert) {
+void ESP32MQTT::begin(WiFiClientSecure &wifiClient, const char *caCert) {
     begin(wifiClient, caCert, mqttServer, mqttPort, mqttUser, mqttPass);
 }
 
-void ESP32MQTT::begin(WiFiClientSecure& wifiClient, const char* caCert, 
-                      const char* server, uint16_t port, const char* user, const char* pass) {
+void ESP32MQTT::begin(WiFiClientSecure &wifiClient, const char *caCert, const char *server,
+                      uint16_t port, const char *user, const char *pass) {
     // Update config
     mqttServer = server;
     mqttPort = port;
     mqttUser = user;
     mqttPass = pass;
-    
+
     // Set CA certificate
     wifiClient.setCACert(caCert);
-    
+
     // Create MQTT client instance
     mqttClient = new PubSubClient(wifiClient);
-    
+
     // Set server and port
     mqttClient->setServer(mqttServer, mqttPort);
-    
+
     // Set buffer size
     mqttClient->setBufferSize(IoTNetConfig::kMqttMaxPacketSize);
-    
+
     Serial.printf("%s MQTT initialized\n", Utilities::getTimestamp().c_str());
     Serial.printf("%s Server: %s:%d\n", Utilities::getTimestamp().c_str(), mqttServer, mqttPort);
 }
@@ -51,7 +47,7 @@ void ESP32MQTT::setCallback(MQTT_CALLBACK_SIGNATURE) {
     }
 }
 
-bool ESP32MQTT::subscribe(const char* topic) {
+bool ESP32MQTT::subscribe(const char *topic) {
     if (mqttClient && mqttClient->connected()) {
         bool result = mqttClient->subscribe(topic);
         if (result) {
@@ -62,11 +58,11 @@ bool ESP32MQTT::subscribe(const char* topic) {
     return false;
 }
 
-bool ESP32MQTT::publish(const char* topic, const char* payload) {
+bool ESP32MQTT::publish(const char *topic, const char *payload) {
     return publish(topic, payload, false);
 }
 
-bool ESP32MQTT::publish(const char* topic, const char* payload, bool retained) {
+bool ESP32MQTT::publish(const char *topic, const char *payload, bool retained) {
     if (mqttClient && mqttClient->connected()) {
         return mqttClient->publish(topic, payload, retained);
     }
@@ -87,13 +83,13 @@ bool ESP32MQTT::reconnect() {
     if (!mqttClient) {
         return false;
     }
-    
+
     if (mqttClient->connected()) {
         return true;
     }
-    
+
     Serial.printf("%s Connecting to MQTT...", Utilities::getTimestamp().c_str());
-    
+
     if (mqttClient->connect(clientId, mqttUser, mqttPass)) {
         Serial.println(" ✅ Connected!");
         return true;

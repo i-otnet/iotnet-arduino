@@ -1,0 +1,15 @@
+{
+    "name": "IoTNet",
+    "version": "1.0.0",
+    "author": "IoTNet Team",
+    "maintainer": "farismnrr",
+    "sentence": "A lightweight IoT networking library for seamless MQTT and secure communication.",
+    "paragraph": "IoTNet provides a unified interface for connecting IoT devices to MQTT brokers and cloud services using secure and efficient network protocols, simplifying the development of connected applications.",
+    "category": "Communication",
+    "repository": "https://github.com/i-otnet/iotnet-arduino",
+    "url": "https://i-ot.net",
+    "license": "MIT",
+    "architectures": ["*"],
+    "includes": ["IoTNet.h"],
+    "depends": ["PubSubClient"]
+}

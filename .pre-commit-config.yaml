@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: Clang Format Check
+        entry: bash -c "find . -type f \\( -name \"*.cpp\" -o -name \"*.h\" -o -name \"*.ino\" \\) -exec clang-format -i {} +"
+        language: system
+      - id: version-check
+        name: Version Consistency
+        entry: python3 scripts/check_versions.py
+        language: system
+      - id: clean-commit
+        name: Clean Commit Message
+        entry: bash -c 'if [ -z "$(git log -1 --pretty=%B | tr -d "[:space:]")" ]; then echo "❌ Commit message is empty!"; exit 1; fi'
+        language: system

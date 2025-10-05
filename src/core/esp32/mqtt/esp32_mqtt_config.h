@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
+#include <functional>
 
 #ifndef MQTT_SERVER
 #define MQTT_SERVER "<your-mqtt-broker>"
@@ -23,11 +24,11 @@
 #define MQTT_MAX_PACKET_SIZE 8192
 #endif
 
-namespace IoTNetConfig {    
-    constexpr const char* kMqttServer = MQTT_SERVER;
-    constexpr uint16_t kMqttPort = static_cast<uint16_t>(MQTT_PORT);
-    constexpr const char* kMqttUser = MQTT_USER;
-    constexpr const char* kMqttPass = MQTT_PASS;
+namespace IoTNetConfig {
+constexpr const char *kMqttServer = MQTT_SERVER;
+constexpr uint16_t kMqttPort = static_cast<uint16_t>(MQTT_PORT);
+constexpr const char *kMqttUser = MQTT_USER;
+constexpr const char *kMqttPass = MQTT_PASS;
 
-    constexpr size_t kMqttMaxPacketSize = static_cast<size_t>(MQTT_MAX_PACKET_SIZE);
-}
+constexpr size_t kMqttMaxPacketSize = static_cast<size_t>(MQTT_MAX_PACKET_SIZE);
+} // namespace IoTNetConfig

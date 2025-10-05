@@ -9,6 +9,6 @@
 #endif
 
 namespace IoTNetConfig {
-    constexpr const char* kWifiSsid = WIFI_SSID;
-    constexpr const char* kWifiPass = WIFI_PASS;
-}
+constexpr const char *kWifiSsid = WIFI_SSID;
+constexpr const char *kWifiPass = WIFI_PASS;
+} // namespace IoTNetConfig

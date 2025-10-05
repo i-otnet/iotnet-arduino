@@ -10,7 +10,7 @@ String Utilities::getTimestamp() {
     ms %= 1000;
     seconds %= 60;
     minutes %= 60;
-    
+
     char buffer[16];
     sprintf(buffer, "[%02lu:%02lu:%02lu.%03lu]", hours, minutes, seconds, ms);
     return String(buffer);
