@@ -41,7 +41,9 @@ class ESP32MQTT {
 
   private:
     PubSubClient *mqttClient;
-    const char *clientId;
+    std::string clientId;
+    // Generate random and unique client ID
+    std::string generateRandomClientId();
 
     // MQTT configuration
     const char *mqttServer;

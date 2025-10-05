@@ -1,12 +1,20 @@
 #include "esp32_mqtt.h"
 #include "esp32_mqtt_config.h"
+#include <Arduino.h>
+#include <sstream>
 
 namespace IoTNet {
 
 ESP32MQTT::ESP32MQTT()
-    : mqttClient(nullptr), clientId("ESP32Agent"), mqttServer(IoTNetConfig::kMqttServer),
-      mqttPort(IoTNetConfig::kMqttPort), mqttUser(IoTNetConfig::kMqttUser),
-      mqttPass(IoTNetConfig::kMqttPass) {}
+    : mqttClient(nullptr), clientId(generateRandomClientId()),
+      mqttServer(IoTNetConfig::kMqttServer), mqttPort(IoTNetConfig::kMqttPort),
+      mqttUser(IoTNetConfig::kMqttUser), mqttPass(IoTNetConfig::kMqttPass) {}
+std::string ESP32MQTT::generateRandomClientId() {
+    // Use millis and random for uniqueness
+    std::stringstream ss;
+    ss << "ESP32Client-" << (uint32_t)ESP.getEfuseMac() << "-" << random(0xFFFFF);
+    return ss.str();
+}
 
 ESP32MQTT::~ESP32MQTT() {
     if (mqttClient) {
@@ -89,9 +97,13 @@ bool ESP32MQTT::reconnect() {
         return true;
     }
 
-    Serial.print("Connecting to MQTT...");
+    // Regenerate clientId for each reconnect for extra uniqueness
+    clientId = generateRandomClientId();
 
-    if (mqttClient->connect(clientId, mqttUser, mqttPass)) {
+    Serial.print("Connecting to MQTT with clientId: ");
+    Serial.println(clientId.c_str());
+
+    if (mqttClient->connect(clientId.c_str(), mqttUser, mqttPass)) {
         Serial.println();
         Serial.println("✅ MQTT Connected!");
         return true;
