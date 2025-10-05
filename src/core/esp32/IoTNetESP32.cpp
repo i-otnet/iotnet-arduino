@@ -1,5 +1,7 @@
 #include "IoTNetESP32.h"
 #include "certs/mqtt_ca_cert.h"
+#include "mqtt/esp32_mqtt_config.h"
+#include "wifi/esp32_wifi_config.h"
 
 namespace IoTNet {
 
@@ -14,7 +16,6 @@ void IoTNetAgent::setWiFiConfig(const char *ssid, const char *password) {
     wifiSsid = ssid;
     wifiPassword = password;
     customWifiConfigSet = true;
-    Serial.printf("WiFi Config set: %s\n", ssid);
 }
 
 void IoTNetAgent::setMqttConfig(const char *server, uint16_t port, const char *user,
@@ -24,12 +25,11 @@ void IoTNetAgent::setMqttConfig(const char *server, uint16_t port, const char *u
     mqttUser = user;
     mqttPass = pass;
     customMqttConfigSet = true;
-    Serial.printf("MQTT Config set: %s:%d\n", server, port);
 }
 
 void IoTNetAgent::defaultCallback(char *topic, byte *payload, unsigned int length) {
-    Serial.printf("%s Topic: %s\n", Utilities::getTimestamp().c_str(), topic);
-    Serial.printf("%s Payload (%d bytes): ", Utilities::getTimestamp().c_str(), length);
+    Serial.printf("Topic: %s\n", topic);
+    Serial.printf("Payload (%d bytes): ", length);
     for (unsigned int i = 0; i < length; i++) {
         Serial.write(payload[i]);
     }
@@ -41,11 +41,11 @@ void IoTNetAgent::begin() {
     const char *ssid = customWifiConfigSet ? wifiSsid : IoTNetConfig::kWifiSsid;
     const char *password = customWifiConfigSet ? wifiPassword : IoTNetConfig::kWifiPass;
 
-    Serial.printf("%s IoTNet ESP32 Initializing...\n", Utilities::getTimestamp().c_str());
+    Serial.println("IoTNet ESP32 Initializing...");
 
     // Connect to WiFi
     while (!wifi.begin(ssid, password)) {
-        Serial.printf("%s Retrying WiFi in 5s...\n", Utilities::getTimestamp().c_str());
+        Serial.println("Retrying WiFi in 5s...");
         delay(5000);
     }
 
@@ -62,9 +62,9 @@ void IoTNetAgent::begin() {
     mqtt.setCallback(defaultCallback);
 
     // Connect to MQTT broker
-    Serial.printf("%s Connecting to MQTT broker...\n", Utilities::getTimestamp().c_str());
+    Serial.println("Connecting to MQTT broker...");
     while (!mqtt.reconnect()) {
-        Serial.printf("%s Retrying in 5s...\n", Utilities::getTimestamp().c_str());
+        Serial.println("Retrying in 5s...");
         delay(5000);
     }
 
@@ -72,7 +72,7 @@ void IoTNetAgent::begin() {
     mqtt.subscribe("iotnet/test");
 
     lastReconnectAttempt = millis();
-    Serial.printf("%s ✅ IoTNet ESP32 Ready!\n", Utilities::getTimestamp().c_str());
+    Serial.println("✅ IoTNet ESP32 Ready!");
 }
 
 void IoTNetAgent::loop() {
@@ -85,7 +85,7 @@ void IoTNetAgent::loop() {
         if (now - lastReconnectAttempt > reconnectInterval) {
             lastReconnectAttempt = now;
 
-            Serial.printf("%s Reconnecting to MQTT...\n", Utilities::getTimestamp().c_str());
+            Serial.println("Reconnecting to MQTT...");
             if (mqtt.reconnect()) {
                 // Re-subscribe after reconnect
                 mqtt.subscribe("iotnet/test");

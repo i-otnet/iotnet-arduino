@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../utilities/esp32_utilities.h"
+#include <WiFi.h>
 
 namespace IoTNet {
 

@@ -1,4 +1,5 @@
 #include "esp32_mqtt.h"
+#include "esp32_mqtt_config.h"
 
 namespace IoTNet {
 
@@ -37,8 +38,8 @@ void ESP32MQTT::begin(WiFiClientSecure &wifiClient, const char *caCert, const ch
     // Set buffer size
     mqttClient->setBufferSize(IoTNetConfig::kMqttMaxPacketSize);
 
-    Serial.printf("%s MQTT initialized\n", Utilities::getTimestamp().c_str());
-    Serial.printf("%s Server: %s:%d\n", Utilities::getTimestamp().c_str(), mqttServer, mqttPort);
+    Serial.println("MQTT initialized");
+    Serial.printf("Server: %s:%d\n", mqttServer, mqttPort);
 }
 
 void ESP32MQTT::setCallback(MQTT_CALLBACK_SIGNATURE) {
@@ -51,7 +52,7 @@ bool ESP32MQTT::subscribe(const char *topic) {
     if (mqttClient && mqttClient->connected()) {
         bool result = mqttClient->subscribe(topic);
         if (result) {
-            Serial.printf("%s Subscribed to: %s\n", Utilities::getTimestamp().c_str(), topic);
+            Serial.printf("Subscribed to: %s\n", topic);
         }
         return result;
     }
@@ -88,10 +89,11 @@ bool ESP32MQTT::reconnect() {
         return true;
     }
 
-    Serial.printf("%s Connecting to MQTT...", Utilities::getTimestamp().c_str());
+    Serial.print("Connecting to MQTT...");
 
     if (mqttClient->connect(clientId, mqttUser, mqttPass)) {
-        Serial.println(" ✅ Connected!");
+        Serial.println();
+        Serial.println("✅ MQTT Connected!");
         return true;
     } else {
         Serial.printf(" ❌ Failed (rc=%d)\n", mqttClient->state());

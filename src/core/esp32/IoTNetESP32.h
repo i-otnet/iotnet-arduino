@@ -1,10 +1,7 @@
 #pragma once
 
 #include "core/esp32/mqtt/esp32_mqtt.h"
-#include "core/esp32/mqtt/esp32_mqtt_config.h"
-#include "core/esp32/utilities/esp32_utilities.h"
 #include "core/esp32/wifi/esp32_wifi.h"
-#include "core/esp32/wifi/esp32_wifi_config.h"
 
 namespace IoTNet {
 

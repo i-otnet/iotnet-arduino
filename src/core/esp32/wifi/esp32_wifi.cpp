@@ -12,8 +12,8 @@ bool ESP32WiFi::begin(const char *ssid, const char *password) {
     wifiSsid = ssid;
     wifiPassword = password;
 
-    Serial.printf("%s Connecting to WiFi...\n", Utilities::getTimestamp().c_str());
-    Serial.printf("%s SSID: %s\n", Utilities::getTimestamp().c_str(), ssid);
+    Serial.printf("SSID: %s\n", ssid);
+    Serial.print("Connecting to WiFi");
 
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
@@ -27,16 +27,14 @@ bool ESP32WiFi::begin(const char *ssid, const char *password) {
 
     if (WiFi.status() == WL_CONNECTED) {
         Serial.println();
-        Serial.printf("%s IP Address: %s\n", Utilities::getTimestamp().c_str(),
-                      WiFi.localIP().toString().c_str());
-        Serial.printf("%s Signal Strength: %d dBm\n", Utilities::getTimestamp().c_str(),
-                      WiFi.RSSI());
-        Serial.printf("%s ✅ WiFi connected!\n", Utilities::getTimestamp().c_str());
+        Serial.printf("IP Address: %s\n", WiFi.localIP().toString().c_str());
+        Serial.printf("Signal Strength: %d dBm\n", WiFi.RSSI());
+        Serial.println("✅ WiFi Connected!");
         lastReconnectAttempt = millis();
         return true;
     } else {
         Serial.println();
-        Serial.printf("%s ❌ WiFi connection failed!\n", Utilities::getTimestamp().c_str());
+        Serial.println("❌ WiFi connection failed!");
         return false;
     }
 }
@@ -58,8 +56,7 @@ void ESP32WiFi::loop() {
         unsigned long now = millis();
         if (now - lastReconnectAttempt > reconnectInterval) {
             lastReconnectAttempt = now;
-            Serial.printf("%s ⚠️  WiFi disconnected! Reconnecting...\n",
-                          Utilities::getTimestamp().c_str());
+            Serial.println("⚠️  WiFi disconnected! Reconnecting...");
             WiFi.disconnect();
             WiFi.begin(wifiSsid, wifiPassword);
 
@@ -72,13 +69,11 @@ void ESP32WiFi::loop() {
 
             if (WiFi.status() == WL_CONNECTED) {
                 Serial.println();
-                Serial.printf("%s IP Address: %s\n", Utilities::getTimestamp().c_str(),
-                              WiFi.localIP().toString().c_str());
-                Serial.printf("%s ✅ WiFi reconnected!\n", Utilities::getTimestamp().c_str());
+                Serial.printf("IP Address: %s\n", WiFi.localIP().toString().c_str());
+                Serial.println("✅ WiFi reconnected!");
             } else {
                 Serial.println();
-                Serial.printf("%s ❌ WiFi reconnection failed!\n",
-                              Utilities::getTimestamp().c_str());
+                Serial.println("❌ WiFi reconnection failed!");
             }
         }
     }

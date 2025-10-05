@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../utilities/esp32_utilities.h"
-#include "esp32_mqtt_config.h"
+#include <PubSubClient.h>
+#include <WiFiClientSecure.h>
 
 namespace IoTNet {
 
