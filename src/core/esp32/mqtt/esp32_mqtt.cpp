@@ -9,8 +9,8 @@ ESP32MQTT::ESP32MQTT()
     : mqttClient(nullptr), clientId(generateRandomClientId()),
       mqttServer(IoTNetConfig::kMqttServer), mqttPort(IoTNetConfig::kMqttPort),
       mqttUser(IoTNetConfig::kMqttUser), mqttPass(IoTNetConfig::kMqttPass) {}
+
 std::string ESP32MQTT::generateRandomClientId() {
-    // Use millis and random for uniqueness
     std::stringstream ss;
     ss << "ESP32Client-" << (uint32_t)ESP.getEfuseMac() << "-" << random(0xFFFFF);
     return ss.str();
